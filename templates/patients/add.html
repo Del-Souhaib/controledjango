@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>DASHMIN - Bootstrap Admin Template</title>
+    {% include 'includes/cssfiles.html' %}
+</head>
+
+<body>
+<div class="container-xxl position-relative bg-white d-flex p-0">
+    <!-- Spinner Start -->
+    {% include 'includes/spinner.html' %}
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    {% include 'includes/sidebar.html' %}
+    <!-- Sidebar End -->
+
+
+    <!-- Content Start -->
+    <div class="content">
+        <!-- Navbar Start -->
+        {% include 'includes/header.html' %}
+        <!-- Navbar End -->
+
+
+        <!-- Sale & Revenue Start -->
+        <div class="container-fluid pt-4 px-4">
+            <div class="row g-4">
+                <div class="bg-light rounded h-100 p-4">
+                    <h6 class="mb-4">Ajouter patient</h6>
+                    <form method="POST" action="/patients/create" class="post-form row">
+                        {% csrf_token %}
+                        <div class="col-3 mb-3">
+                            <label for="nom" class="form-label">Nom</label>
+                            {{ form.nom }}
+
+                        </div>
+                        <div class="col-3 mb-3">
+                            <label for="prenom" class="form-label">Prenom</label>
+                            {{ form.prenom }}
+
+                        </div>
+                        <div class="col-3 mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            {{ form.email }}
+
+                        </div>
+                        <div class=" col-3 mb-3">
+                            <label for="dateNaissance" class="form-label">Date de naissance</label>
+                            {{ form.dateNaissance }}
+
+                        </div>
+                        <div class=" col-3 mb-3">
+
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <!-- Sale & Revenue End -->
+
+
+        <!-- Footer Start -->
+        {% include 'includes/footer.html' %}
+        <!-- Footer End -->
+    </div>
+    <!-- Content End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<!-- JavaScript Libraries -->
+{% include 'includes/jsfiles.html' %}
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Edit medecine</title>
+    {% include 'includes/cssfiles.html' %}
+</head>
+
+<body>
+<div class="container-xxl position-relative bg-white d-flex p-0">
+    <!-- Spinner Start -->
+    {% include 'includes/spinner.html' %}
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    {% include 'includes/sidebar.html' %}
+    <!-- Sidebar End -->
+
+
+    <!-- Content Start -->
+    <div class="content">
+        <!-- Navbar Start -->
+        {% include 'includes/header.html' %}
+        <!-- Navbar End -->
+
+
+        <!-- Sale & Revenue Start -->
+        <div class="container-fluid pt-4 px-4">
+            <div class="row g-4">
+                <div class="bg-light rounded h-100 p-4">
+                    <h6 class="mb-4">Modifier rendez-vous</h6>
+
+                    <form method="POST" action="/dates/edit/{{ form.id.value }}" class="post-form row">
+                        {% csrf_token %}
+
+                        <div class="col-3 mb-3">
+                            <label for="nom" class="form-label">Client</label>
+                            {{ form.patient }}
+
+                        </div>
+                        <div class="col-3 mb-3">
+                            <label for="prenom" class="form-label">Medecine</label>
+                            {{ form.medecin }}
+
+                        </div>
+                        <div class="col-3 mb-3">
+                            <label for="email" class="form-label">Consultation</label>
+                            {{ form.consultation }}
+
+                        </div>
+                        <div class="col-3 mb-3">
+                            <label for="email" class="form-label">Date</label>
+                            {{ form.date }}
+
+                        </div>
+                        <div class="col-3 mb-3">
+                            <label for="email" class="form-label">Annuler</label>
+                            <div class="form-check form-switch">
+                            {{ form.anuuler }}
+                            </div>
+
+                        </div>
+
+                        <div class=" col-12 mb-3">
+                            <button type="submit" class="btn btn-primary">Modifier</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+        <!-- Sale & Revenue End -->
+
+
+        <!-- Footer Start -->
+        {% include 'includes/footer.html' %}
+        <!-- Footer End -->
+    </div>
+    <!-- Content End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<!-- JavaScript Libraries -->
+{% include 'includes/jsfiles.html' %}
+</body>
+
+</html>

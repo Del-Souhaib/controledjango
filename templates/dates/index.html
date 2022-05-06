@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Dates</title>
+    {% include 'includes/cssfiles.html' %}
+</head>
+
+<body>
+<div class="container-xxl position-relative bg-white d-flex p-0">
+    <!-- Spinner Start -->
+    {% include 'includes/spinner.html' %}
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    {% include 'includes/sidebar.html' %}
+    <!-- Sidebar End -->
+
+
+    <!-- Content Start -->
+    <div class="content">
+        <!-- Navbar Start -->
+        {% include 'includes/header.html' %}
+        <!-- Navbar End -->
+
+
+        <div class="container-fluid pt-4 px-4">
+            <div class="bg-light text-center rounded p-4">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <h6 class="mb-0">Rendez-vous</h6>
+                    <form method="get" action="/dates/search" class="d-flex align-items-center  ">
+                        <div class="form-outline">
+                            <input type="date" name="search_text" class="form-control form-control-sm"/>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-start align-middle table-bordered table-hover mb-0">
+                        <thead>
+                        <tr class="text-dark">
+                            <th scope="col">Patient</th>
+                            <th scope="col">Medecine</th>
+
+                            <th scope="col">Date</th>
+                            <th scope="col">Annuler</th>
+                            <th scope="col">Consultation type</th>
+
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for d in page_obj.object_list %}
+                            <tr>
+                                <td>{{ d.patient.nom }} {{ d.patient.prenom }}</td>
+                                <td>{{ d.medecin.nom }} {{ d.medecin.prenom }}</td>
+                                <td>{{ d.date }}</td>
+                                <td>{{ d.anuuler }}</td>
+                                                                <td>{{ d.consultation.type }}</td>
+                                {#                                <td>{{ d.specialite }}</td>#}
+                                <td>
+                                    <a href="/dates/details/{{ d.id }}" class="btn btn-sm btn-primary">Affiche</a>
+                                    <a href="/dates/edit/{{ d.id }}" class="btn btn-sm btn-info">Edit</a>
+                                    <p href="/dates/delete/{{ d.id }}" class="btn btn-sm btn-danger mb-0 delete"
+                                       target_id="{{ d.id }}">Supprimer</p>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination mt-3">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" style="font-size: 13px"
+                                       href="?page={{ page_obj.previous_page_number }}"
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li class="page-item active"><a class="page-link"
+                                                            href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+                            </li>
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Footer Start -->
+        {% include 'includes/footer.html' %}
+        <!-- Footer End -->
+    </div>
+    <!-- Content End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+<div class="modal fade" id="deletemodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="" class="modal-body deleteform">
+                {% csrf_token %}
+                <p>Voulez vous supprimer ce rendez-vous ? </p>
+                <div class="text-end mt-2">
+                    <button class="btn btn-danger btn-sm  ">Supprimer</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- JavaScript Libraries -->
+{% include 'includes/jsfiles.html' %}
+
+<script>
+    $(document).ready(function () {
+        $('.delete').click(function () {
+            $('.deleteform').attr('action', '/dates/delete/' + $(this).attr('target_id'))
+            $('#deletemodal').modal('show')
+        })
+    })
+</script>
+</body>
+
+</html>
