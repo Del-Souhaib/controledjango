@@ -33,18 +33,28 @@
                     <form method="POST" action="/medecines/create" class="post-form row">
                         {% csrf_token %}
                         <div class="col-3 mb-3">
-                            <label for="nom" class="form-label">Nom</label>
+                            <label for="nom" class="form-label">{{ form.nom.label }}</label>
                             {{ form.nom }}
+                            {% for mssg in form.nom.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class="col-3 mb-3">
-                            <label for="prenom" class="form-label">Prenom</label>
+                            <label for="prenom" class="form-label">{{ form.prenom.label }}</label>
                             {{ form.prenom }}
+                            {% for mssg in form.prenom.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class="col-3 mb-3">
-                            <label for="email" class="form-label">Spécialité</label>
+                            <label for="email" class="form-label">{{ form.specialite.label }}
+                            </label>
                             {{ form.specialite }}
+                            {% for mssg in form.specialite.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class=" col-12 mb-3">

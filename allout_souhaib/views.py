@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, logout, login
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -86,13 +86,15 @@ def patientsdelete(request, id):
 
 def addPatient(request):
     if request.method == 'POST':
-        nom = request.POST.get("nom", "").capitalize()
-        prenom = request.POST.get("prenom", "")
-        email = request.POST.get("email", "")
-        dateNaissance = request.POST.get("dateNaissance")
-        patient = Patient.objects.create(nom=nom, prenom=prenom, email=email, dateNaissance=dateNaissance)
-        patient.save()
-        return redirect("/patients")
+        form=PatientForm(request.POST)
+        if form.is_valid():
+            patient = Patient.objects.create(nom=form.cleaned_data['nom'], prenom=form.cleaned_data['prenom'],
+                                             email=form.cleaned_data['email'],
+                                             dateNaissance=form.cleaned_data['dateNaissance'])
+            patient.save()
+            return HttpResponseRedirect("/patients")
+        else:
+            return render(request, "patients/add.html", {'form': form})
     else:
         form = PatientForm()
         return render(request, "patients/add.html", {'form': form})
@@ -101,17 +103,18 @@ def addPatient(request):
 def editPatient(request, id):
     patient = Patient.objects.get(id=id)
     if request.method == 'POST':
-        nom = request.POST.get("nom", "").capitalize()
-        prenom = request.POST.get("prenom", "")
-        email = request.POST.get("email", "")
-        dateNaissance = request.POST.get("dateNaissance")
+        form=PatientForm(request.POST)
+        if form.is_valid():
+            patient.nom = form.cleaned_data['nom']
+            patient.prenom = form.cleaned_data['prenom']
+            patient.email = form.cleaned_data['email']
+            patient.dateNaissance = form.cleaned_data['dateNaissance']
+            patient.save()
+            return redirect('/patients')
+        else:
+            context = {"form": form}
+            return render(request, "patients/edit.html", context)
 
-        patient.nom = nom
-        patient.prenom = prenom
-        patient.email = email
-        patient.dateNaissance = dateNaissance
-        patient.save()
-        return redirect('/patients')
     else:
         form = PatientForm()
         form['id'].initial = patient.id
@@ -196,12 +199,15 @@ def docteursdelete(request, id):
 
 def adddocteur(request):
     if request.method == 'POST':
-        nom = request.POST.get("nom", "").capitalize()
-        prenom = request.POST.get("prenom", "")
-        specialite = request.POST.get("specialite", "")
-        medecine = Medecin.objects.create(nom=nom, prenom=prenom, specialite=specialite)
-        medecine.save()
-        return redirect("/medecines")
+        form=MedecinForm(request.POST)
+        if form.is_valid():
+            medecine = Medecin.objects.create(nom=form.cleaned_data['nom'], prenom=form.cleaned_data['prenom'],
+                                             specialite=form.cleaned_data['specialite'])
+            medecine.save()
+            return redirect("/medecines")
+        else:
+            return render(request, "medecines/add.html", {'form': form})
+
     else:
         form = MedecinForm()
         return render(request, "medecines/add.html", {'form': form})
@@ -210,15 +216,17 @@ def adddocteur(request):
 def editdocteur(request, id):
     medecine = Medecin.objects.get(id=id)
     if request.method == 'POST':
-        nom = request.POST.get("nom", "").capitalize()
-        prenom = request.POST.get("prenom", "")
-        specialite = request.POST.get("specialite", "")
+        form=MedecinForm(request.POST)
+        if form.is_valid():
+            medecine.nom = form.cleaned_data['nom']
+            medecine.prenom = form.cleaned_data['prenom']
+            medecine.specialite = form.cleaned_data['specialite']
+            medecine.save()
+            return redirect('/medecines')
+        else:
+            context = {"form": form}
+            return render(request, "medecines/edit.html", context)
 
-        medecine.nom = nom
-        medecine.prenom = prenom
-        medecine.specialite = specialite
-        medecine.save()
-        return redirect('/medecines')
     else:
         form = MedecinForm()
         form['id'].initial = medecine.id
@@ -285,15 +293,20 @@ def datesdelete(request, id):
 
 def adddates(request):
     if request.method == 'POST':
-        patient = Patient.objects.get(id=request.POST.get("patient", "").capitalize())
-        medecine = Medecin.objects.get(id=request.POST.get("medecin", ""))
-        consultation = Consultation.objects.get(id=request.POST.get("consultation", ""))
-        date = request.POST.get("date", "")
+        form=DateForm(request.POST)
+        if form.is_valid():
+            rendzevous = RenderVous.objects.create(patient=form.cleaned_data['patient'],
+                                                   medecin=form.cleaned_data['medecin'],
+                                                   date=form.cleaned_data['date'],
+                                                   consultation=form.cleaned_data['consultation'], anuuler=False)
+            rendzevous.save()
 
-        rendzevous = RenderVous.objects.create(patient=patient, medecin=medecine,date=date,
-                                               consultation=consultation, anuuler=False)
-        rendzevous.save()
-        return redirect("/dates")
+            return redirect("/dates")
+        else:
+            return render(request, "dates/add.html", {'form': form})
+
+
+
     else:
         form = DateForm()
         return render(request, "dates/add.html", {'form': form})
@@ -302,23 +315,24 @@ def adddates(request):
 def editdates(request, id):
     date = RenderVous.objects.get(id=id)
     if request.method == 'POST':
-        patient = Patient.objects.get(id=request.POST.get("patient", "").capitalize())
-        medecine = Medecin.objects.get(id=request.POST.get("medecin", ""))
-        consultation = Consultation.objects.get(id=request.POST.get("consultation", ""))
-        date_re = request.POST.get("date", "")
-        annuler = request.POST.get("anuuler", "")
-        if annuler=='on':
-            date.anuuler = True
+        form = DateForm(request.POST)
+        if form.is_valid():
+            date.patient = form.cleaned_data['patient']
+            date.medecin = form.cleaned_data['medecin']
+            date.consultation = form.cleaned_data['consultation']
+            date.date = form.cleaned_data['date']
+            if form.cleaned_data["anuuler"]:
+                date.anuuler = 1
+            else:
+                date.annuler = 0
+
+            date.save()
+
+            return redirect('/dates')
         else:
-            date.anuuler = False
+            context = {"form": form}
+            return render(request, "dates/edit.html", context)
 
-        date.patient = patient
-        date.medecin = medecine
-        date.consultation = consultation
-        date.date = date_re
-
-        date.save()
-        return redirect('/dates')
     else:
         form = DateForm()
         form['id'].initial = date.id

@@ -33,25 +33,38 @@
 
                     <form method="POST" action="/dates/edit/{{ form.id.value }}" class="post-form row">
                         {% csrf_token %}
+                        {{ form.id }}
 
                         <div class="col-3 mb-3">
                             <label for="nom" class="form-label">Client</label>
                             {{ form.patient }}
+                            {% for mssg in form.patient.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class="col-3 mb-3">
                             <label for="prenom" class="form-label">Medecine</label>
                             {{ form.medecin }}
+                            {% for mssg in form.medecin.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class="col-3 mb-3">
                             <label for="email" class="form-label">Consultation</label>
                             {{ form.consultation }}
+                            {% for mssg in form.consultation.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class="col-3 mb-3">
                             <label for="email" class="form-label">Date</label>
                             {{ form.date }}
+                            {% for mssg in form.date.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class="col-3 mb-3">
@@ -59,6 +72,9 @@
                             <div class="form-check form-switch">
                             {{ form.anuuler }}
                             </div>
+                            {% for mssg in form.anuuler.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
 

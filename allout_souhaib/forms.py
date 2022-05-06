@@ -6,7 +6,7 @@ from allout_souhaib.models import *
 
 
 class PatientForm(forms.Form):
-    id = forms.IntegerField(label='id', widget=forms.HiddenInput())
+    id = forms.IntegerField(label='id', widget=forms.HiddenInput(), required=False)
     nom = forms.CharField(label='Nom', required=True, max_length=100,
                           widget=forms.TextInput(attrs={'class': 'form-control'}))
     prenom = forms.CharField(label='Prenom', required=True, max_length=100,
@@ -18,7 +18,7 @@ class PatientForm(forms.Form):
 
 
 class MedecinForm(forms.Form):
-    id = forms.IntegerField(label='id', widget=forms.HiddenInput())
+    id = forms.IntegerField(label='id', widget=forms.HiddenInput(), required=False)
     nom = forms.CharField(label='Nom', required=True, max_length=100,
                           widget=forms.TextInput(attrs={'class': 'form-control'}))
     prenom = forms.CharField(label='Prenom', required=True, max_length=100,
@@ -37,14 +37,15 @@ class MedecinForm(forms.Form):
 
 
 class DateForm(forms.Form):
-    id = forms.IntegerField(label='id', widget=forms.HiddenInput())
+    id = forms.IntegerField(label='id', widget=forms.HiddenInput(), required=False)
     date = forms.DateField(label='Date', required=True,
-                           widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date','min':datetime.date.today()}))
-    anuuler = forms.BooleanField(label='Annuler',required=False,
-                                 widget=forms.CheckboxInput(attrs={'class': 'form-check-input','type':'checkbox'}))
+                           widget=forms.DateInput(
+                               attrs={'class': 'form-control', 'type': 'date', 'min': datetime.date.today()}))
+    anuuler = forms.BooleanField(label='Annuler', required=False,
+                                 widget=forms.CheckboxInput(attrs={'class': 'form-check-input', 'type': 'checkbox'}))
     medecin = forms.ModelChoiceField(queryset=Medecin.objects.all(), label='Medecin', required=True
-                                     ,widget=forms.Select(attrs={'class': 'form-select'}))
+                                     , widget=forms.Select(attrs={'class': 'form-select'}))
     patient = forms.ModelChoiceField(queryset=Patient.objects.all(), label='Patient', required=True
-                                     ,widget=forms.Select(attrs={'class': 'form-select'}))
+                                     , widget=forms.Select(attrs={'class': 'form-select'}))
     consultation = forms.ModelChoiceField(queryset=Consultation.objects.all(), label='Consultation'
-                                          ,widget=forms.Select(attrs={'class': 'form-select'}), required=True)
+                                          , widget=forms.Select(attrs={'class': 'form-select'}), required=True)

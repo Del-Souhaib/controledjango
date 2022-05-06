@@ -33,23 +33,38 @@
 
                     <form method="POST" action="/patients/edit/{{ form.id.value }}" class="post-form row">
                         {% csrf_token %}
+                            {{ form.id }}
 
                         <div class="col-3 mb-3">
-                            <label for="nom" class="form-label">Nom</label>
+                            <label for="nom" class="form-label">{{ form.nom.label }}</label>
                             {{ form.nom }}
+                            {% for mssg in form.nom.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
+
                         </div>
                         <div class="col-3 mb-3">
-                            <label for="prenom" class="form-label">Prenom</label>
+                            <label for="prenom" class="form-label">{{ form.prenom.label }}</label>
                             {{ form.prenom }}
+                            {% for mssg in form.prenom.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
+
                         </div>
                         <div class="col-3 mb-3">
-                            <label for="email" class="form-label">Email</label>
+                            <label for="email" class="form-label">{{ form.email.label }}</label>
                             {{ form.email }}
+                            {% for mssg in form.email.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class=" col-3 mb-3">
-                            <label for="dateNaissance" class="form-label">Date de naissance</label>
-                                                        {{ form.dateNaissance }}
+                            <label for="dateNaissance" class="form-label">{{ form.dateNaissance.label }}</label>
+                            {{ form.dateNaissance }}
+                            {% for mssg in form.dateNaissance.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class=" col-3 mb-3">

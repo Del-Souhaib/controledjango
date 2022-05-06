@@ -33,23 +33,35 @@
                     <form method="POST" action="/dates/add" class="post-form row">
                         {% csrf_token %}
                         <div class="col-3 mb-3">
-                            <label for="nom" class="form-label">Client</label>
+                            <label for="nom" class="form-label">{{ form.patient.label }}</label>
                             {{ form.patient }}
+                            {% for mssg in form.patient.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class="col-3 mb-3">
-                            <label for="prenom" class="form-label">Medecine</label>
+                            <label for="prenom" class="form-label">{{ form.medecin.label }}</label>
                             {{ form.medecin }}
+                            {% for mssg in form.medecin.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class="col-3 mb-3">
-                            <label for="email" class="form-label">Consultation</label>
+                            <label for="email" class="form-label">{{ form.consultation.label }}</label>
                             {{ form.consultation }}
+                            {% for mssg in form.consultation.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
                         <div class="col-3 mb-3">
-                            <label for="email" class="form-label">Date</label>
+                            <label for="email" class="form-label">{{ form.date.label }}</label>
                             {{ form.date }}
+                            {% for mssg in form.date.errors %}
+                                <p class="text-danger">{{ mssg }}</p>
+                            {% endfor %}
 
                         </div>
 
