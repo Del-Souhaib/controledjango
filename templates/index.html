@@ -30,7 +30,7 @@
             <div class="row g-4">
                 <div class="col-sm-6 col-xl-3">
                     <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                        <i class="fa fa-chart-line fa-3x text-primary"></i>
+                        <i class="fa fa-user-md fa-3x text-primary"></i>
                         <div class="ms-3">
                             <p class="mb-2">Medecines</p>
                             <h6 class="mb-0">{{ nbdocteur }}</h6>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-sm-6 col-xl-3">
                     <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                        <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                        <i class="fa fa-user-injured fa-3x text-primary"></i>
                         <div class="ms-3">
                             <p class="mb-2">Patients</p>
                             <h6 class="mb-0">{{nbpatients}}</h6>
@@ -48,7 +48,7 @@
                 </div>
                 <div class="col-sm-6 col-xl-3">
                     <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                        <i class="fa fa-chart-area fa-3x text-primary"></i>
+                        <i class="fa fa-user fa-3x text-primary"></i>
                         <div class="ms-3">
                             <p class="mb-2">Admins</p>
                             <h6 class="mb-0">{{nbadmins}}</h6>
@@ -57,7 +57,7 @@
                 </div>
                 <div class="col-sm-6 col-xl-3">
                     <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                        <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                        <i class="fa fa-calendar-alt fa-3x text-primary"></i>
                         <div class="ms-3">
                             <p class="mb-2">Rendez-vous</p>
                             <h6 class="mb-0">{{nbrndezvous}}</h6>
@@ -109,9 +109,12 @@
                                     </a>
                                 </li>
                             {% endif %}
-                            <li class="page-item active"><a class="page-link"
-                                                            href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
-                            </li>
+                            {% for p in page.page_range %}
+                                <li class="page-item {% if p == page_obj.number %} active {% endif %}"><a
+                                        class="page-link"
+                                        href="?page={{ p }}">{{ p }}</a>
+                                </li>
+                            {% endfor %}
                             {% if page_obj.has_next %}
                                 <li class="page-item">
                                     <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
