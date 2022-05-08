@@ -18,7 +18,7 @@
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
 {#                            <a href="#" class="dropdown-item">My Profile</a>#}
 {#                            <a href="#" class="dropdown-item">Settings</a>#}
-                            <form method="post" action="logoutclick" class="dropdown-item">
+                            <form method="post" action="/logoutclick" class="dropdown-item">
                                 {% csrf_token %}
                                 <button style="background: none;border: none;padding: unset">Log Out</button>
                             </form>

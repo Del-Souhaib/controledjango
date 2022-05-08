@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -12,7 +13,24 @@ from allout_souhaib.models import *
 ######################"# Home page ###############################
 def dashboard(request):
     if request.user.is_authenticated:
-        return render(request, "index.html")
+        dates = RenderVous.objects.filter(date=datetime.date.today()).order_by('-id')
+        nbdocteur=Medecin.objects.count()
+        nbpatients=Patient.objects.count()
+        nbadmins=User.objects.count()
+        nbrndezvous=RenderVous.objects.count()
+
+        p = Paginator(dates, 10)
+        page_number = request.GET.get('page')
+        try:
+            page_obj = p.get_page(page_number)
+        except PageNotAnInteger:
+            page_obj = p.page(1)
+        except EmptyPage:
+            page_obj = p.page(p.num_pages)
+        context = {'page_obj': page_obj, 'title': 'index','nbdocteur':nbdocteur,'nbpatients':nbpatients,
+                   'nbadmins':nbadmins,'nbrndezvous':nbrndezvous}
+
+        return render(request, "index.html",context)
     else:
         return redirect('/login')
 
@@ -55,6 +73,8 @@ def logoutclick(request):
 
 
 def patientsindex(request):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
     patients = Patient.objects.order_by('-id').all()
 
     p = Paginator(patients, 10)
@@ -70,12 +90,18 @@ def patientsindex(request):
 
 
 def patientsdetails(request, id):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     pateint = Patient.objects.get(id=id)
     context = {'patient': pateint}
     return render(request, 'patients/details.html', context)
 
 
 def patientsdelete(request, id):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     try:
         patient = Patient.objects.get(id=id)
     except Patient.DoesNotExist:
@@ -85,6 +111,9 @@ def patientsdelete(request, id):
 
 
 def addPatient(request):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     if request.method == 'POST':
         form=PatientForm(request.POST)
         if form.is_valid():
@@ -101,6 +130,9 @@ def addPatient(request):
 
 
 def editPatient(request, id):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     patient = Patient.objects.get(id=id)
     if request.method == 'POST':
         form=PatientForm(request.POST)
@@ -128,6 +160,9 @@ def editPatient(request, id):
 
 
 def patientsupdate(request):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     id = request.POST.get("id", "")
     nom = request.POST.get("nom", "").capitalize()
     prenom = request.POST.get("prenom", "")
@@ -144,6 +179,9 @@ def patientsupdate(request):
 
 
 def patientssearch(request):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     # on récupere les données du model Patient
     search = request.GET.get('search_text')
     patients = Patient.objects.filter(nom__contains=search)
@@ -163,6 +201,9 @@ def patientssearch(request):
 
 
 def docteursindex(request):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     medecines = Medecin.objects.order_by('-id').all()
 
     p = Paginator(medecines, 10)
@@ -178,6 +219,9 @@ def docteursindex(request):
 
 
 def docteursdetails(request, id):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     medecine = Medecin.objects.get(id=id)
     form = MedecinForm()
     form['id'].initial = medecine.id
@@ -189,6 +233,9 @@ def docteursdetails(request, id):
 
 
 def docteursdelete(request, id):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     try:
         medecine = Medecin.objects.get(id=id)
     except Medecin.DoesNotExist:
@@ -198,6 +245,9 @@ def docteursdelete(request, id):
 
 
 def adddocteur(request):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     if request.method == 'POST':
         form=MedecinForm(request.POST)
         if form.is_valid():
@@ -214,6 +264,9 @@ def adddocteur(request):
 
 
 def editdocteur(request, id):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     medecine = Medecin.objects.get(id=id)
     if request.method == 'POST':
         form=MedecinForm(request.POST)
@@ -239,6 +292,9 @@ def editdocteur(request, id):
 
 
 def docteurssearch(request):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     # on récupere les données du model Patient
     search = request.GET.get('search_text')
     medecines = Medecin.objects.filter(nom__contains=search)
@@ -258,6 +314,9 @@ def docteurssearch(request):
 
 
 def datesindex(request):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     dates = RenderVous.objects.order_by('-id').all()
     p = Paginator(dates, 10)
     page_number = request.GET.get('page')
@@ -272,17 +331,19 @@ def datesindex(request):
 
 
 def datesdetails(request, id):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     date = RenderVous.objects.get(id=id)
     form = MedecinForm()
-    # form['id'].initial = date.id
-    # form['nom'].initial = medecine.nom
-    # form['prenom'].initial = medecine.prenom
-    # form['specialite'].initial = medecine.specialite
     context = {'date': date}
     return render(request, 'dates/details.html', context)
 
 
 def datesdelete(request, id):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     try:
         date = RenderVous.objects.get(id=id)
     except Medecin.DoesNotExist:
@@ -292,6 +353,9 @@ def datesdelete(request, id):
 
 
 def adddates(request):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     if request.method == 'POST':
         form=DateForm(request.POST)
         if form.is_valid():
@@ -313,6 +377,9 @@ def adddates(request):
 
 
 def editdates(request, id):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     date = RenderVous.objects.get(id=id)
     if request.method == 'POST':
         form = DateForm(request.POST)
@@ -347,6 +414,9 @@ def editdates(request, id):
 
 
 def datessearch(request):
+    if request.user.is_authenticated==False:
+        return redirect('/login')
+
     # on récupere les données du model Patient
     search = request.GET.get('search_text')
     dates = RenderVous.objects.filter(date=search)
